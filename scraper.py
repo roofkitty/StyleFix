@@ -26,7 +26,7 @@ def get_images(info, path):
         urllib.urlretrieve(image_url, '%s.jpg' % i)
         i += 1
 
-def main(url, path):
+def scraper(url, path):
     info = get_content(url)
     get_images(info, path)
 
@@ -34,5 +34,5 @@ if __name__ == '__main__':
     url = sys.argv[1]
     path = sys.argv[2]
 
-    main(url, path)
+    scraper(url, path)
 
