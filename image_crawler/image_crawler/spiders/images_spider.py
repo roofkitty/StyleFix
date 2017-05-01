@@ -1,35 +1,32 @@
 """
-A crawler
+The Scrapy spider for crawling blogs.
 """
 import csv
 import scrapy
 
 class ImagesSpider(scrapy.Spider):
     """
-    The spider for crawling image urls and saving them locally
+    The spider for crawling image urls and saving them locally.
     """
     name = "images"
 
     def start_requests(self):
         """
-        Read from input/bloggers.csv and send a scrapy.Request for each home page
+        Reads from input/bloggers.csv and send a scrapy.Request for each home page.
+        Writes a mapping of blog identifier to image urls to /output.
         """
-        with open("../input/bloggers_debug.csv", 'r') as bloggers_csv:
+        with open('../input/bloggers_debug.csv', 'r') as bloggers_csv:
             reader = csv.reader(bloggers_csv)
             next(reader) # skip header row
             for row in reader:
-                yield scrapy.Request(url=row[1], callback=self.parse, meta={'blog': row[0]})
+                blog_id = row[0]
+                yield scrapy.Request(url=row[1], callback=self.parse, meta={'blog': blog_id})
 
     def parse(self, response):
-        print '------- in parse callback, logging blog name:' + response.meta.get('blog')
-        for image_url in response.css('img').re(r'src="(.*?.jpg)"'):
-            yield {
-                'url': image_url
+        blog_id = response.meta.get('blog')
+        # dedupe all image urls on one page
+        image_urls_on_page = set(response.css('img').re(r'src="(.*?.jpg)"'))
+        yield {
+            'blog_id': blog_id,
+            'image_urls': image_urls_on_page
             }
-
-
-    # def parse_image_urls(self, response):
-    #     pass
-
-    # def save_images(self, url):
-    #     pass
