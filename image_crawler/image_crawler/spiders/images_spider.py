@@ -29,4 +29,13 @@ class ImagesSpider(scrapy.Spider):
         yield {
             'blog_id': blog_id,
             'image_urls': image_urls_on_page
-            }
+        }
+
+        linked_page = response.css('li a::attr("href")').extract()
+        if linked_page is not None:
+            for page in linked_page:
+                if not any(x in page for x in ('customer', 'account', 'checkout', 'cart', 'forgotpassword', 'catalog')):
+                    print('LINKED PAGE')
+                    print(page)
+                    print('')
+                    yield response.follow(url=page, callback=self.parse, meta={'blog': blog_id})

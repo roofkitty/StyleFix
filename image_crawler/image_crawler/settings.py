@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'image_crawler.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'image_crawler (+http://www.yourdomain.com)'
+USER_AGENT = 'image_crawler (https://github.com/SiyuYang)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -65,6 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    'scrapy.pipelines.images.ImagesPipeline': 400,
     'image_crawler.pipelines.DuplicatesPipeline': 300,
     'image_crawler.pipelines.OutputJsonPipeline': 700
 }
@@ -89,3 +90,17 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# The maximum depth that will be allowed to crawl for any site (default is 0, which means unlimited)
+DEPTH_LIMIT = 2
+
+# For the Images Pipeline
+IMAGES_STORE = '/Users/siyuyang/Dropbox/StyleFix/downloaded_images'
+
+# drop images which are too small
+IMAGES_MIN_HEIGHT = 400
+IMAGES_MIN_WIDTH = 400
+
+# does not allow media redirections for now - copyright issues?
+MEDIA_ALLOW_REDIRECTS = False
+REDIRECT_ENABLED = False
